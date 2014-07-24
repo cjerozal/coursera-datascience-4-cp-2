@@ -3,19 +3,19 @@
 # (fips == "06037"). Which city has seen greater changes over time in motor
 # vehicle emissions?
 
-# library(ggplot2)
-# 
-# # read in data
-# NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
-# SCC <- readRDS("exdata_data_NEI_data/Source_Classification_Code.rds")
-# 
-# # filter down to only motor vehicle data from Baltimore City, MD and LA, CA
-# onroadRows <- NEI[, "type"] == "ON-ROAD"
-# motorVehicleNEI <- NEI[onroadRows, ]
-# baltimoreRows <- motorVehicleNEI[, "fips"] == "24510"
-# baltimoreNEI <- motorVehicleNEI[baltimoreRows, ]
-# losAngelesRows <- motorVehicleNEI[, "fips"] == "06037"
-# losAngelesNEI <- motorVehicleNEI[losAngelesRows, ]
+library(ggplot2)
+
+# read in data
+NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("exdata_data_NEI_data/Source_Classification_Code.rds")
+
+# filter down to only motor vehicle data from Baltimore City, MD and LA, CA
+onroadRows <- NEI[, "type"] == "ON-ROAD"
+motorVehicleNEI <- NEI[onroadRows, ]
+baltimoreRows <- motorVehicleNEI[, "fips"] == "24510"
+baltimoreNEI <- motorVehicleNEI[baltimoreRows, ]
+losAngelesRows <- motorVehicleNEI[, "fips"] == "06037"
+losAngelesNEI <- motorVehicleNEI[losAngelesRows, ]
 
 # Create a function to separate printing to a PNG from creating the plot
 outputToPNG <- function(fileName, createPlot) {
@@ -61,6 +61,7 @@ createPlot <- function() {
           + labs(title = expression('Motor Vehicle Emissions in Baltimore and Los Angeles'),
                  x = "Year",
                  y = "Emissions (tons)")
+          + geom_text(x = 2.5, y = 2000, label = "Absolute value of the slope of the fitted line is greater for Los Angeles -> Greater change")
           )
 }
 
