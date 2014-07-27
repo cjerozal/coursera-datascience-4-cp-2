@@ -5,7 +5,7 @@
 library(datasets)
 
 # read in data
-# NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
+NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
 
 # Create a function to separate printing to a PNG from creating the plot
 outputToPNG <- function(fileName, createPlot) {
@@ -39,8 +39,9 @@ createPlot <- function() {
               main = expression('Total Baltimore PM'[2.5]*' Emissions'),
               xlab = "Year",
               ylab = "Emissions (tons)"))
-    
-    # TODO add a trendline!
+    # add a trendline
+    line <- lm(emissions ~ years, emissionData)
+    abline(a = coef(line)[1], b = coef(line)[3])
 }
 
 createPlot()
