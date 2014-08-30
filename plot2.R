@@ -19,29 +19,19 @@ createPlot <- function() {
     # filter down to only data from Baltimore City, Maryland
     baltimoreRows <- NEI[, "fips"] == "24510"
     baltimoreNEI <- NEI[baltimoreRows,]
-    
+
     # calculate the total emissions by year
-    years <- vector(mode = "character")
-    emissions <- vector(mode = "numeric")
-    split_NEI <- split(baltimoreNEI, baltimoreNEI$year)
-    for(year in names(split_NEI)) {
-        yearDataFrame <- split_NEI[[year]]
-        yearEmissions <- sum(yearDataFrame$Emissions)
-        years <- append(years, year)
-        emissions <- append(emissions, yearEmissions)
-    }
+    totalPM25ByYear <- tapply(baltimoreNEI$Emissions, baltimoreNEI$year, sum)
+
+    plot(names(totalPM25ByYear), totalPM25ByYear,
+         type = "l",
+         main = expression('Total Baltimore PM'[2.5]*' Emissions'),
+         xlab = "Year",
+         ylab = "Emissions (tons)")
     
-    # construct the data frame and plot it
-    emissionData <- data.frame(years, emissions)
-    with(emissionData,
-         plot(years, emissions,
-              type = "l",
-              main = expression('Total Baltimore PM'[2.5]*' Emissions'),
-              xlab = "Year",
-              ylab = "Emissions (tons)"))
     # add a trendline
-    line <- lm(emissions ~ years, emissionData)
-    abline(a = coef(line)[1], b = coef(line)[3])
+    line <- lm(totalPM25ByYear ~ as.numeric(names(totalPM25ByYear)))
+    abline(a = coef(line)[1], b = coef(line)[2], col = "blue")
 }
 
 createPlot()
