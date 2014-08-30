@@ -5,11 +5,15 @@ library(ggplot2)
 
 # read in data
 NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
-SCC <- readRDS("exdata_data_NEI_data/Source_Classification_Code.rds")
 
-# filter down to only motor vehicle data from Baltimore City, Maryland
+# filter down to only data from Baltimore City, Maryland
 baltimoreRows <- NEI[, "fips"] == "24510"
 filteredNEI <- NEI[baltimoreRows, ]
+
+# Filter down to only motor vehicle data. According to data description at
+# http://www.epa.gov/ttn/chief/net/2008neiv3/2008_neiv3_tsd_draft.pdf
+# the onroad type of emission data reports on "passenger cars, motorcycles,
+# minivans, sport utility vehicles, light duty trucks, heavy duty trucks, and buses"
 onroadRows <- filteredNEI[, "type"] == "ON-ROAD"
 twiceFilteredNEI <- filteredNEI[onroadRows, ]
 

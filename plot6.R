@@ -6,12 +6,16 @@
 library(ggplot2)
 
 # read in data
-NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
-SCC <- readRDS("exdata_data_NEI_data/Source_Classification_Code.rds")
+# NEI <- readRDS("exdata_data_NEI_data/summarySCC_PM25.rds")
 
-# filter down to only motor vehicle data from Baltimore City, MD and LA, CA
+# Filter down to only motor vehicle data. According to data description at
+# http://www.epa.gov/ttn/chief/net/2008neiv3/2008_neiv3_tsd_draft.pdf
+# the onroad type of emission data reports on "passenger cars, motorcycles,
+# minivans, sport utility vehicles, light duty trucks, heavy duty trucks, and buses"
 onroadRows <- NEI[, "type"] == "ON-ROAD"
 motorVehicleNEI <- NEI[onroadRows, ]
+
+# filter down to only data from Baltimore City, MD or LA, CA
 baltimoreRows <- motorVehicleNEI[, "fips"] == "24510"
 baltimoreNEI <- motorVehicleNEI[baltimoreRows, ]
 losAngelesRows <- motorVehicleNEI[, "fips"] == "06037"
@@ -61,7 +65,8 @@ createPlot <- function() {
           + labs(title = expression('Motor Vehicle Emissions in Baltimore and Los Angeles'),
                  x = "Year",
                  y = "Emissions (tons)")
-          + geom_text(x = 2.5, y = 2000, label = "Absolute value of the slope of the fitted line is greater for Los Angeles -> Greater change")
+          + geom_text(x = 2.5, y = 2100, label = "Abs value of the slope of the fitted line")
+          + geom_text(x = 2.5, y = 1900, label = "is greater for LA -> Greater change")
           )
 }
 
